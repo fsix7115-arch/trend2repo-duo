@@ -1,0 +1,66 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Project {
+  id        String   @id @default(cuid())
+  name      String
+  niche     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  ideaBriefs IdeaBrief[]
+  blueprints  RepoBlueprint[]
+  agentRuns   AgentRun[]
+
+  @@index([createdAt])
+}
+
+model IdeaBrief {
+  id        String   @id @default(cuid())
+  projectId String
+  dataJson  String
+  createdAt DateTime @default(now())
+
+  project    Project         @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  blueprints RepoBlueprint[]
+
+  @@index([projectId])
+}
+
+model RepoBlueprint {
+  id          String   @id @default(cuid())
+  projectId   String
+  ideaBriefId String
+  dataJson    String
+  createdAt   DateTime @default(now())
+
+  project   Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  ideaBrief IdeaBrief @relation(fields: [ideaBriefId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+  @@index([ideaBriefId])
+}
+
+model AgentRun {
+  id         String   @id @default(cuid())
+  projectId  String
+  agentName  String
+  inputJson  String
+  outputJson String?
+  status     String   @default("pending")
+  error      String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+  @@index([agentName])
+}
+
