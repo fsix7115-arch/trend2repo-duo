@@ -2,6 +2,12 @@
 
 # Trend2Repo Duo
 
+[![CI](https://github.com/fsix7115-arch/trend2repo-duo/actions/workflows/ci.yml/badge.svg)](https://github.com/fsix7115-arch/trend2repo-duo/actions/workflows/ci.yml)
+[![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-14-000000?logo=nextdotjs&logoColor=white)](https://nextjs.org/)
+[![Tests](https://img.shields.io/badge/tests-5%20passing-brightgreen)](tests/unit)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+
 **Two AI agents. One pipeline. Find the trend, ship the repo.**
 
 [![Next.js 14](https://img.shields.io/badge/Next.js-14.2-000?logo=next.js)](https://nextjs.org)

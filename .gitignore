@@ -14,3 +14,5 @@ playwright-report
 *.tsbuildinfo
 next-env.d.ts
 
+# throwaway database for the api unit test
+.test-data/

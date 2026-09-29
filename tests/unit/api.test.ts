@@ -1,5 +1,25 @@
 import { beforeAll, describe, expect, it } from 'vitest';
-import { prisma } from '@/lib/prisma';
+import path from 'node:path';
+import { execFileSync } from 'node:child_process';
+import { mkdirSync } from 'node:fs';
+
+// This suite drives the real Prisma client, so it needs a real database.
+// Point DATABASE_URL at a throwaway SQLite file and push the schema, so the
+// suite is self-contained in CI and never touches a developer's dev.db.
+// This must run before the `@/lib/prisma` import below, which is why the
+// dynamic import is used instead of a static one.
+const ROOT = path.resolve(__dirname, '../..');
+const TEST_DB = path.resolve(ROOT, '.test-data/api-test.db');
+process.env.DATABASE_URL = `file:${TEST_DB}`;
+
+mkdirSync(path.dirname(TEST_DB), { recursive: true });
+execFileSync('npx', ['prisma', 'db', 'push', '--skip-generate', '--accept-data-loss'], {
+  cwd: ROOT,
+  env: { ...process.env },
+  stdio: 'ignore'
+});
+
+const { prisma } = await import('@/lib/prisma');
 import { buildExportZip } from '@/lib/agents/tools/export-zip';
 import { RepoBlueprintSchema, type IdeaBrief, type RepoBlueprint } from '@/lib/schemas';
 
