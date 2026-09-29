@@ -1,5 +1,14 @@
-ci: set DATABASE_URL in the e2e database setup step
+ci: fix e2e database wiring and skip the screenshot generator
 
-The step ran prisma generate / db push / seed without DATABASE_URL, so
-Prisma exited P1012 before any test ran. Verified locally with the exact
-CI sequence: generate, push, seed, then Playwright 3/3 with CI=true.
+Two problems made the e2e job unusable in CI:
+
+1. The Playwright step ran without DATABASE_URL, so the dev server it boots
+   could not initialise Prisma. It now passes file:./dev.db explicitly, and
+   the setup step does too.
+
+2. tests/e2e/screenshots.spec.ts is a local authoring tool - it overwrites
+   the PNGs in docs/ and depends on live upstream trend sources. Excluded
+   when CI is set.
+
+Verified locally with the exact CI sequence: generate, db push, seed, then
+Playwright 1/1 with CI=true.

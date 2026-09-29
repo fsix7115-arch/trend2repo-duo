@@ -78,6 +78,9 @@ jobs:
         run: npm run test:e2e
         env:
           CI: 'true'
+          # The dev server Playwright boots has no .env in CI, so the URL has
+          # to come from the environment or Prisma refuses to initialise.
+          DATABASE_URL: file:./dev.db
 
       - name: Upload Playwright report
         if: failure()
